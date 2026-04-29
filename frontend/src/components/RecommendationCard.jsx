@@ -6,10 +6,12 @@ function getScoreBadgeClasses(score) {
   return "bg-red-500/20 text-red-400 border-red-500/30";
 }
 
-function formatPrice(price) {
-  if (price >= 10000000) return `₹${(price / 10000000).toFixed(1)} Cr`;
-  if (price >= 100000) return `₹${(price / 100000).toFixed(1)} L`;
-  return `₹${price.toLocaleString("en-IN")}`;
+function formatMonthlyPrice(price) {
+  // price from backend is annual; convert to monthly
+  const monthly = price / 12;
+  if (monthly >= 100000) return `₹${(monthly / 100000).toFixed(1)}L`;
+  if (monthly >= 1000) return `₹${Math.round(monthly).toLocaleString("en-IN")}`;
+  return `₹${Math.round(monthly).toLocaleString("en-IN")}`;
 }
 
 const amenityIcons = {
@@ -56,9 +58,10 @@ export default function RecommendationCard({ rec, index }) {
       {/* Price & Key Stats */}
       <div className="p-4 pt-3">
         <div className="text-2xl font-extrabold text-transparent bg-clip-text
-                        bg-gradient-to-r from-violet-400 to-fuchsia-400 mb-3">
-          {formatPrice(rec.price)}
+                        bg-gradient-to-r from-violet-400 to-fuchsia-400 mb-1">
+          {formatMonthlyPrice(rec.price)}
         </div>
+        <div className="text-[11px] text-slate-500 mb-3">per month (est.)</div>
 
         <div className="grid grid-cols-3 gap-3 mb-3">
           <div className="rounded-xl bg-white/5 px-3 py-2 text-center">

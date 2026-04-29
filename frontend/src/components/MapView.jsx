@@ -80,10 +80,11 @@ export default function MapView({ recommendations }) {
         iconAnchor: [18, 18],
       });
 
-      const formatPrice = (p) => {
-        if (p >= 10000000) return `₹${(p / 10000000).toFixed(1)} Cr`;
-        if (p >= 100000) return `₹${(p / 100000).toFixed(1)} L`;
-        return `₹${p.toLocaleString("en-IN")}`;
+      // Format price as monthly
+      const formatMonthlyPrice = (p) => {
+        const monthly = p / 12;
+        if (monthly >= 100000) return `₹${(monthly / 100000).toFixed(1)}L/mo`;
+        return `₹${Math.round(monthly).toLocaleString("en-IN")}/mo`;
       };
 
       const popup = L.popup().setContent(`
@@ -92,7 +93,7 @@ export default function MapView({ recommendations }) {
             ${rec.location}
           </div>
           <div style="font-size: 13px; color: #475569; line-height: 1.7;">
-            <strong>Price:</strong> ${formatPrice(rec.price)}<br/>
+            <strong>Price:</strong> ${formatMonthlyPrice(rec.price)}<br/>
             <strong>BHK:</strong> ${rec.bhk}<br/>
             <strong>Area:</strong> ${rec.area} sqft<br/>
             <strong>Distance:</strong> ${rec.distance} km<br/>

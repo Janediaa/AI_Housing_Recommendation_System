@@ -110,3 +110,29 @@ html, body, #root {
     radial-gradient(ellipse at 50% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 50%),
     #0a0a1a;
 }
+
+/* ─── Sort Dropdown ────────────────────────────────── */
+select option {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 8px 12px;
+}
+
+select:focus {
+  outline: none;
+}
+
+/* ─── Horizontal Scrollbar ─────────────────────────── */
+::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+::-webkit-scrollbar-track:horizontal {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb:horizontal {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:horizontal:hover {
+  background: rgba(139, 92, 246, 0.5);
+}

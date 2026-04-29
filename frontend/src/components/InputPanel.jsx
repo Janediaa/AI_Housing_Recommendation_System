@@ -12,15 +12,14 @@ const FACILITY_OPTIONS = [
 
 export default function InputPanel({ onSubmit, loading }) {
   const [location, setLocation] = useState("");
-  const [budget, setBudget] = useState(5000000);
+  const [monthlyBudget, setMonthlyBudget] = useState(50000);
   const [radius, setRadius] = useState(10);
   const [facilities, setFacilities] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const formatCurrency = (val) => {
-    if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)} Cr`;
-    if (val >= 100000) return `₹${(val / 100000).toFixed(1)} L`;
-    return `₹${val.toLocaleString("en-IN")}`;
+  const formatMonthlyBudget = (val) => {
+    if (val >= 100000) return `₹${(val / 100000).toFixed(1)}L / month`;
+    return `₹${val.toLocaleString("en-IN")} / month`;
   };
 
   const toggleFacility = (fac) => {
@@ -32,46 +31,51 @@ export default function InputPanel({ onSubmit, loading }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!location.trim()) return;
-    onSubmit({ location: location.trim(), budget, radius, facilities });
+    // Convert monthly budget to annual for the backend model
+    const annualBudget = monthlyBudget * 12;
+    onSubmit({ location: location.trim(), budget: annualBudget, radius, facilities });
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-5 w-full"
+      className="flex flex-col gap-6 w-full"
     >
       {/* Location Input */}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
-          Location
+          Location / Workplace
         </label>
         <input
           id="location-input"
           type="text"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="e.g. Saket, Delhi"
-          className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10
-                     text-white placeholder-slate-500 outline-none
+          placeholder="Enter area OR workplace (e.g. Google Office Gurgaon, IIT Delhi)"
+          className="w-full px-4 py-3.5 rounded-xl bg-white/5 border border-white/10
+                     text-white placeholder-slate-500 outline-none text-sm
                      focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20
                      transition-all duration-300"
           required
         />
+        <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed">
+          Supports: Area names, office names, companies, universities, schools
+        </p>
       </div>
 
-      {/* Budget Slider */}
+      {/* Monthly Budget Slider */}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
-          Budget: <span className="text-violet-400">{formatCurrency(budget)}</span>
+          Monthly Budget: <span className="text-violet-400">{formatMonthlyBudget(monthlyBudget)}</span>
         </label>
         <input
           id="budget-slider"
           type="range"
-          min={500000}
-          max={50000000}
-          step={100000}
-          value={budget}
-          onChange={(e) => setBudget(Number(e.target.value))}
+          min={5000}
+          max={500000}
+          step={5000}
+          value={monthlyBudget}
+          onChange={(e) => setMonthlyBudget(Number(e.target.value))}
           className="w-full h-2 rounded-full appearance-none cursor-pointer
                      bg-gradient-to-r from-violet-600/30 to-fuchsia-600/30
                      [&::-webkit-slider-thumb]:appearance-none
@@ -85,8 +89,8 @@ export default function InputPanel({ onSubmit, loading }) {
                      [&::-webkit-slider-thumb]:cursor-pointer"
         />
         <div className="flex justify-between text-xs text-slate-500">
-          <span>₹5L</span>
-          <span>₹5 Cr</span>
+          <span>₹5,000</span>
+          <span>₹5L / month</span>
         </div>
       </div>
 
@@ -132,8 +136,8 @@ export default function InputPanel({ onSubmit, loading }) {
           id="facilities-dropdown"
           type="button"
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10
-                     text-left text-slate-400 outline-none
+          className="w-full px-4 py-3.5 rounded-xl bg-white/5 border border-white/10
+                     text-left text-slate-400 text-sm outline-none
                      hover:border-violet-500/50 focus:border-violet-500
                      transition-all duration-300"
         >
