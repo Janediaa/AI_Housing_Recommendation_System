@@ -199,4 +199,4 @@ Each property receives a score (0–10) based on:
 - **Format**: `?text={location},{city},India&apiKey={key}&limit=1&format=json`
 - **Rate Limit**: Free tier — 3,000 requests/day, 5 requests/second
 - **Usage**: Geocoding user input locations at runtime + one-time dataset preprocessing
-# minor_2_again
+
